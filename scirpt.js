@@ -14,16 +14,17 @@ var divClass = null; // array which stores class of each division
 
 
 function init(noPlayers){
-	auto = noPlayers;
+	auto = noPlayers; //auto mode true or false
 	Frame = document.getElementById("frame");
 	Frame.innerHTML='';
 	divWidth = '60';
 	divHeight = '60';
 	ballCount = new Array();
 	divClass = new Array();
-	player = 'red';
+	player = 'red'; //default player
 	Frame.className = 'red';
 
+	//creates 8 x 8 grid and initialize ballCount as 0 and className as default
 	for(var row=0;row<8;row++){
 		ballCount[row] = new Array();
 		divClass[row] = new Array();
@@ -44,6 +45,7 @@ function init(noPlayers){
 	}
 }
 
+//function on clicking a grid
 function action(a_row, a_col){
 	if(divClass[a_row][a_col] == 'default' || divClass[a_row][a_col] == player){
 		reaction(a_row, a_col);
@@ -84,11 +86,27 @@ function gameOver(){
 		}
 	}
 	if((redCount>2 && blueCount==0) || (blueCount>2 && redCount==0)){
-		Frame.innerHTML='<h2>Game Over</h2><p>Click To Start Again</p><p onClick="init(true);">One Player</p><p onClick="init(false);">Two Players</p>';
+		if(auto){
+			if(player == 'red'){
+				message = 'You Win';
+			}else{
+				message = 'You Lose';
+			}
+		}else{
+			message = player + ' Wins';
+		}
+		Frame.innerHTML='<h2>'+message+'</h2><p>Click To Play Again</p><p onClick="init(true);">One Player</p><p onClick="init(false);">Two Players</p>';
 	}
 }
 function reaction(r_row, r_col){
-	if(ballCount[r_row][r_col] == 3){
+	var limit = 3;
+	if(r_row == 0 || r_row == 7){
+		limit--;
+	}
+	if(r_col == 0 || r_col == 7){
+		limit--;
+	}
+	if(ballCount[r_row][r_col] == limit){
 		document.getElementById('div'+r_row+r_col).className = "default";
 		divClass[r_row][r_col] = 'default';
 		ballCount[r_row][r_col] = 0;
@@ -111,7 +129,6 @@ function reaction(r_row, r_col){
 		gameOver();
 	}
 }
-
 
 
 
